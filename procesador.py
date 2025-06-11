@@ -3,7 +3,7 @@ import openpyxl
 from datetime import datetime, timedelta
 
 class ProcesadorPiezas:
-    def _init_(self, archivo_csv, fecha_inicio, fecha_fin):
+    def __init__(self, archivo_csv, fecha_inicio, fecha_fin):
         self.archivo_csv = archivo_csv
         self.fecha_inicio = fecha_inicio
         self.fecha_fin = fecha_fin
