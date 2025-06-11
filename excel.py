@@ -29,4 +29,22 @@ class ProcesadorPiezas:
         self.df["Fecha Fin"] = self.df["Fecha Inicio"] + timedelta(minutes=4)
         self.resultado = self.df.groupby(["Fecha Inicio", "Fecha Fin"])["Piezas_Hechas"].sum().reset_index()
 
+    def guardar_excel(self, archivo_salida):
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "Piezas por Intervalo"
+        ws.append(["total", "fecha inicio", "fecha fin"])
+        
+        for _, row in self.resultado.iterrows():
+            ws.append([
+                row["Piezas_Hechas"],
+                row["Fecha Inicio"].strftime("%d/%m/%Y %H:%M:%S"),
+                row["Fecha Fin"].strftime("%d/%m/%Y %H:%M:%S")
+            ])
 
+        wb.save(archivo_salida)
+        self.mostrar_mensaje_final(archivo_salida)
+
+    def mostrar_mensaje_final(self, nombre_archivo):
+        print(f"\nArchivo procesado y guardado como: {nombre_archivo}")
+        print(" Procesamiento completado")
