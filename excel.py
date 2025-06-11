@@ -6,6 +6,31 @@ from datetime import datetime, timedelta
 archivo_csv = "M5_C.08.csv"
 df = pd.read_csv(archivo_csv)
 
+# Verificar si DataFrame tiene las columnas fecha y MS_C
+# si falta una, lanza error que detiene la ejecucion
+if not {"fecha", "M5_C"}.issubset(df.columns):
+    raise ValueError("Faltan columnas 'fecha' o 'M5_C'.")
+
+# Verificar nulos en la columna fecha y muestra una advertencia
+if df["fecha"].isnull().any():
+    print("'fecha' tiene valores nulos.")
+    #verifica si hay valores vacios en la columna MS_C
+if df["M5_C"].isnull().any():
+    print("'M5_C' tiene valores nulos.")
+
+# Intentar convertir la columna fecha a formato datetime
+# Si algún valor tiene un formato inválido, se lanza una excepción
+# y se muestra un mensaje de error, pero sin detener el programa
+try:
+    pd.to_datetime(df["fecha"], errors="raise")
+except:
+    print("Error en el formato de 'fecha'.")
+
+# Verificar si M5_C contiene valores no numéricos
+# Se intenta convertir cada valor a número
+if pd.to_numeric(df["M5_C"], errors="coerce").isnull().any():
+    print("'M5_C' contiene valores no numéricos.")
+
 # Convertir la columna de fecha a formato datetime y eliminar la zona horaria
 df["fecha"] = pd.to_datetime(df["fecha"], errors="coerce").dt.tz_localize(None)
 
